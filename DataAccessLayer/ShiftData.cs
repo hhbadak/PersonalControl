@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer
 {
-    internal class ShiftData
+    public class ShiftData
     {
+        public int ID { get; set; }
+        public string Shift { get; set; }
     }
 }

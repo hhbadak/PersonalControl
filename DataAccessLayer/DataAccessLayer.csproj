@@ -46,11 +46,13 @@
     <Compile Include="ConnectionStrings.cs" />
     <Compile Include="DataModel.cs" />
     <Compile Include="GlazingData.cs" />
+    <Compile Include="GlazingFault.cs" />
     <Compile Include="PersonalInfo.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QualityData.cs" />
     <Compile Include="RetouchData.cs" />
+    <Compile Include="RetouchFault.cs" />
     <Compile Include="ShiftData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

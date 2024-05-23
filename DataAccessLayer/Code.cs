@@ -17,9 +17,10 @@ namespace DataAccessLayer
         public string StockCode { get; set; }
         public int Stock { get; set; }
         public string Group { get; set; }
-        public int Stock { get; set; }
-        public int Stock { get; set; }
-        public int Stock { get; set; }
-        public int Stock { get; set; }
+        public string Model { get; set; }
+        public string Dimensions { get; set; }
+        public string Weight { get; set; }
+        public Int16 LabelFeature { get; set; }
+        public string FormCode { get; set; }
     }
 }

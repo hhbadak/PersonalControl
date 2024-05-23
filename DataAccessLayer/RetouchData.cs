@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer
 {
-    internal class RetouchData
+    public class RetouchData
     {
     }
 }
