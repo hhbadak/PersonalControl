@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer
 {
-    public class Product
+    public class Product : QualityData
     {
         public int ID { get; set; }
         public string Barcode { get; set; }
@@ -26,5 +26,11 @@ namespace DataAccessLayer
         public DateTime TransactionDate { get; set; }
         public string TransactionDateStr { get; set; }
         public int DailyCastingID { get; set; }
+        public string Type { get; set; }
+        public string Definition { get; set; }
+        public Int16 Quality { get; set; }
+        public int Count { get; set; }
+        public string Code { get; set; }
+        public string RetouchFire { get; set; }
     }
 }
