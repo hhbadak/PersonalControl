@@ -4,3 +4,9 @@ C:\Users\USER\Documents\GitHub\PersonalControl\DataAccessLayer\obj\Debug\DataAcc
 C:\Users\USER\Documents\GitHub\PersonalControl\DataAccessLayer\obj\Debug\DataAccessLayer.csproj.CoreCompileInputs.cache
 C:\Users\USER\Documents\GitHub\PersonalControl\DataAccessLayer\obj\Debug\DataAccessLayer.dll
 C:\Users\USER\Documents\GitHub\PersonalControl\DataAccessLayer\obj\Debug\DataAccessLayer.pdb
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\DataAccessLayer\bin\Debug\DataAccessLayer.dll
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\DataAccessLayer\bin\Debug\DataAccessLayer.pdb
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\DataAccessLayer\obj\Debug\DataAccessLayer.csproj.AssemblyReference.cache
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\DataAccessLayer\obj\Debug\DataAccessLayer.csproj.CoreCompileInputs.cache
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\DataAccessLayer\obj\Debug\DataAccessLayer.dll
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\DataAccessLayer\obj\Debug\DataAccessLayer.pdb

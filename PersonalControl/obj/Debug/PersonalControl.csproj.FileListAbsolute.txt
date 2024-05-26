@@ -12,3 +12,17 @@ C:\Users\USER\Documents\GitHub\PersonalControl\PersonalControl\obj\Debug\Persona
 C:\Users\USER\Documents\GitHub\PersonalControl\PersonalControl\obj\Debug\PersonalControl.csproj.CopyComplete
 C:\Users\USER\Documents\GitHub\PersonalControl\PersonalControl\obj\Debug\PersonalControl.exe
 C:\Users\USER\Documents\GitHub\PersonalControl\PersonalControl\obj\Debug\PersonalControl.pdb
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\bin\Debug\PersonalControl.exe.config
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\bin\Debug\PersonalControl.exe
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\bin\Debug\PersonalControl.pdb
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\bin\Debug\DataAccessLayer.dll
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\bin\Debug\DataAccessLayer.pdb
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\obj\Debug\PersonalControl.csproj.AssemblyReference.cache
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\obj\Debug\PersonalControl.csproj.SuggestedBindingRedirects.cache
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\obj\Debug\PersonalControl.default.resources
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\obj\Debug\PersonalControl.Properties.Resources.resources
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\obj\Debug\PersonalControl.csproj.GenerateResource.cache
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\obj\Debug\PersonalControl.csproj.CoreCompileInputs.cache
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\obj\Debug\PersonalControl.csproj.CopyComplete
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\obj\Debug\PersonalControl.exe
+C:\Users\HsnHs\OneDrive\Belgeler\GitHub\PersonalControl\PersonalControl\obj\Debug\PersonalControl.pdb

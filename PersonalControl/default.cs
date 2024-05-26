@@ -22,8 +22,8 @@ namespace PersonalControl
 
         private void default_Load(object sender, EventArgs e)
         {
-            cb_employee.ValueMember = "Kimlik";
-            cb_employee.DisplayMember = "defination";
+            cb_employee.ValueMember = "ID";
+            cb_employee.DisplayMember = "definition";
             cb_employee.DataSource = dm.getPersonalRecord();
             loadGrid();
         }
@@ -46,7 +46,6 @@ namespace PersonalControl
             dt.Columns.Add("Döküm Hata");
             dt.Columns.Add("Rötuş Fire");
             dt.Columns.Add("Kalite");
-            dt.Columns.Add("Kullanıcı Adı");
             dt.Columns.Add("Dökümcü Sicil No");
             dt.Columns.Add("Döküm Tarihi");
 
@@ -60,8 +59,8 @@ namespace PersonalControl
                 r["Döküm Hata"] = rt[i].Fault;
                 r["Rötuş Fire"] = rt[i].RetouchFire;
                 r["Kalite"] = rt[i].Quality;
-                r["Döküm Tarihi"] = rt[i].CastDate;
                 r["Dökümcü"] = rt[i].CastingPersonal;
+                r["Döküm Tarihi"] = rt[i].CastDate;
 
                 dt.Rows.Add(r);
             }
@@ -71,7 +70,12 @@ namespace PersonalControl
 
         private void btn_list_Click(object sender, EventArgs e)
         {
-
+            if (cb_employee.SelectedValue != null)
+            {
+                Product p =  new Product();
+                cb_employee.SelectedValue = p.CastingPersonalID;
+                loadGrid();
+            }
         }
     }
 }
