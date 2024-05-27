@@ -49,7 +49,7 @@ namespace DataAccessLayer
             {
                 cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
                             FROM (
-                                SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+                                SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
                                 FROM UT_D_Urunler u
                                 JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
                                 WHERE u.DokumcuId = @employee
@@ -67,7 +67,7 @@ namespace DataAccessLayer
                                 GROUP BY kl.kaliteAd, kol.tanim, p.Quality
                             ) AS TumUrunler
                             GROUP BY Tür, Tanim
-                            ORDER BY Tanim ASC, Tür ASC";
+                            ORDER BY Tanim ASC, Tür ASC;";
 
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
@@ -104,12 +104,12 @@ namespace DataAccessLayer
             {
                 cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
 FROM (
-    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
     WHERE u.DokumcuId = @employee
-        AND u.DokumTarih >= '2024-01-01' -- Nisan 2024'ün ilk günü
-        AND u.DokumTarih < '2024-02-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND u.DokumTarih >= '2024-01-01'
+        AND u.DokumTarih < '2024-02-01' 
     GROUP BY kl.tanim
 
     UNION ALL
@@ -119,8 +119,8 @@ FROM (
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
     WHERE p.CastPersonal = @employee
-        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND p.CastDate >= '2024-01-01'
+        AND p.CastDate < '2024-02-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
 ) AS TumUrunler
 GROUP BY Tür, Tanim
@@ -160,12 +160,12 @@ ORDER BY Tanim ASC, Tür ASC;";
             {
                 cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
 FROM (
-    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
     WHERE u.DokumcuId = @employee
-        AND u.DokumTarih >= '2024-02-01' -- Nisan 2024'ün ilk günü
-        AND u.DokumTarih < '2024-03-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND u.DokumTarih >= '2024-02-01'
+        AND u.DokumTarih < '2024-03-01' 
     GROUP BY kl.tanim
 
     UNION ALL
@@ -175,15 +175,14 @@ FROM (
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
     WHERE p.CastPersonal = @employee
-        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND p.CastDate >= '2024-02-01'
+        AND p.CastDate < '2024-03-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
 
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
                 cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
                 con.Open();
 
@@ -217,12 +216,12 @@ ORDER BY Tanim ASC, Tür ASC;";
             {
                 cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
 FROM (
-    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
     WHERE u.DokumcuId = @employee
-        AND u.DokumTarih >= '2024-03-01' -- Nisan 2024'ün ilk günü
-        AND u.DokumTarih < '2024-04-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND u.DokumTarih >= '2024-03-01'
+        AND u.DokumTarih < '2024-04-01' 
     GROUP BY kl.tanim
 
     UNION ALL
@@ -232,15 +231,14 @@ FROM (
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
     WHERE p.CastPersonal = @employee
-        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND p.CastDate >= '2024-03-01'
+        AND p.CastDate < '2024-04-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
 
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
                 cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
                 con.Open();
 
@@ -274,12 +272,12 @@ ORDER BY Tanim ASC, Tür ASC;";
             {
                 cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
 FROM (
-    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
     WHERE u.DokumcuId = @employee
-        AND u.DokumTarih >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND u.DokumTarih < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND u.DokumTarih >= '2024-04-01'
+        AND u.DokumTarih < '2024-05-01' 
     GROUP BY kl.tanim
 
     UNION ALL
@@ -289,15 +287,14 @@ FROM (
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
     WHERE p.CastPersonal = @employee
-        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND p.CastDate >= '2024-04-01'
+        AND p.CastDate < '2024-05-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
 
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
                 cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
                 con.Open();
 
@@ -331,12 +328,12 @@ ORDER BY Tanim ASC, Tür ASC;";
             {
                 cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
 FROM (
-    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
     WHERE u.DokumcuId = @employee
-        AND u.DokumTarih >= '2024-05-01' -- Nisan 2024'ün ilk günü
-        AND u.DokumTarih < '2024-06-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND u.DokumTarih >= '2024-05-01'
+        AND u.DokumTarih < '2024-06-01' 
     GROUP BY kl.tanim
 
     UNION ALL
@@ -346,15 +343,14 @@ FROM (
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
     WHERE p.CastPersonal = @employee
-        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND p.CastDate >= '2024-05-01'
+        AND p.CastDate < '2024-06-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
 
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
                 cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
                 con.Open();
 
@@ -388,12 +384,12 @@ ORDER BY Tanim ASC, Tür ASC;";
             {
                 cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
 FROM (
-    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
     WHERE u.DokumcuId = @employee
-        AND u.DokumTarih >= '2024-06-01' -- Nisan 2024'ün ilk günü
-        AND u.DokumTarih < '2024-07-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND u.DokumTarih >= '2024-06-01'
+        AND u.DokumTarih < '2024-07-01' 
     GROUP BY kl.tanim
 
     UNION ALL
@@ -403,15 +399,14 @@ FROM (
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
     WHERE p.CastPersonal = @employee
-        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND p.CastDate >= '2024-06-01'
+        AND p.CastDate < '2024-07-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
 
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
                 cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
                 con.Open();
 
@@ -445,12 +440,12 @@ ORDER BY Tanim ASC, Tür ASC;";
             {
                 cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
 FROM (
-    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
     WHERE u.DokumcuId = @employee
-        AND u.DokumTarih >= '2023-07-01' -- Nisan 2024'ün ilk günü
-        AND u.DokumTarih < '2023-08-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND u.DokumTarih >= '2023-07-01'
+        AND u.DokumTarih < '2023-08-01' 
     GROUP BY kl.tanim
 
     UNION ALL
@@ -460,15 +455,14 @@ FROM (
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
     WHERE p.CastPersonal = @employee
-        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND p.CastDate >= '2023-07-01'
+        AND p.CastDate < '2023-08-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
 
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
                 cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
                 con.Open();
 
@@ -502,12 +496,12 @@ ORDER BY Tanim ASC, Tür ASC;";
             {
                 cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
 FROM (
-    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
     WHERE u.DokumcuId = @employee
-        AND u.DokumTarih >= '2023-08-01' -- Nisan 2024'ün ilk günü
-        AND u.DokumTarih < '2023-09-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND u.DokumTarih >= '2023-08-01'
+        AND u.DokumTarih < '2023-09-01' 
     GROUP BY kl.tanim
 
     UNION ALL
@@ -517,15 +511,14 @@ FROM (
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
     WHERE p.CastPersonal = @employee
-        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND p.CastDate >= '2023-08-01'
+        AND p.CastDate < '2023-09-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
 
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
                 cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
                 con.Open();
 
@@ -559,12 +552,12 @@ ORDER BY Tanim ASC, Tür ASC;";
             {
                 cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
 FROM (
-    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
     WHERE u.DokumcuId = @employee
-        AND u.DokumTarih >= '2023-09-01' -- Nisan 2024'ün ilk günü
-        AND u.DokumTarih < '2023-10-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND u.DokumTarih >= '2023-09-01'
+        AND u.DokumTarih < '2023-10-01' 
     GROUP BY kl.tanim
 
     UNION ALL
@@ -574,15 +567,14 @@ FROM (
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
     WHERE p.CastPersonal = @employee
-        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND p.CastDate >= '2023-09-01'
+        AND p.CastDate < '2023-10-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
 
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
                 cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
                 con.Open();
 
@@ -616,12 +608,12 @@ ORDER BY Tanim ASC, Tür ASC;";
             {
                 cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
 FROM (
-    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
     WHERE u.DokumcuId = @employee
-        AND u.DokumTarih >= '2023-10-01' -- Nisan 2024'ün ilk günü
-        AND u.DokumTarih < '2023-11-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND u.DokumTarih >= '2023-10-01'
+        AND u.DokumTarih < '2023-11-01' 
     GROUP BY kl.tanim
 
     UNION ALL
@@ -631,15 +623,14 @@ FROM (
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
     WHERE p.CastPersonal = @employee
-        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND p.CastDate >= '2023-10-01'
+        AND p.CastDate < '2023-11-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
 
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
                 cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
                 con.Open();
 
@@ -673,12 +664,12 @@ ORDER BY Tanim ASC, Tür ASC;";
             {
                 cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
 FROM (
-    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
     WHERE u.DokumcuId = @employee
-        AND u.DokumTarih >= '2023-11-01' -- Nisan 2024'ün ilk günü
-        AND u.DokumTarih < '2023-12-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND u.DokumTarih >= '2023-11-01'
+        AND u.DokumTarih < '2023-12-01' 
     GROUP BY kl.tanim
 
     UNION ALL
@@ -688,15 +679,14 @@ FROM (
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
     WHERE p.CastPersonal = @employee
-        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND p.CastDate >= '2023-11-01'
+        AND p.CastDate < '2023-12-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
 
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
                 cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
                 con.Open();
 
@@ -728,12 +718,12 @@ ORDER BY Tanim ASC, Tür ASC;";
             List<Product> results = new List<Product>();
             try
             {
-                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet FROM (SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet FROM (SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
     WHERE u.DokumcuId = @employee
-        AND u.DokumTarih >= '2023-12-01' -- Nisan 2024'ün ilk günü
-        AND u.DokumTarih < '2024-01-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND u.DokumTarih >= '2023-12-01'
+        AND u.DokumTarih < '2024-01-01' 
     GROUP BY kl.tanim
 
     UNION ALL
@@ -743,8 +733,8 @@ ORDER BY Tanim ASC, Tür ASC;";
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
     WHERE p.CastPersonal = @employee
-        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
-        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+        AND p.CastDate >= '2023-12-01'
+        AND p.CastDate < '2024-01-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
 ) AS TumUrunler
 GROUP BY Tür, Tanim

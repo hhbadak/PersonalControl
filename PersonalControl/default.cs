@@ -93,12 +93,25 @@ namespace PersonalControl
 
                 // DataGridView'e sorgu sonucunu yükle
                 dgv_list.DataSource = result;
+                var rt = result.OrderByDescending(r => r.ID).ToList();
+                DataTable dt = new DataTable();
 
-                // DataGridView'i güncelle
-                dgv_list.Columns["Type"].HeaderText = "Durum";
-                dgv_list.Columns["Count"].HeaderText = "Sayı";
-                dgv_list.Columns["Count"].DefaultCellStyle.Format = "N0 Adet";
-                dgv_list.Columns["Definition"].HeaderText = "Ürün Kodu";
+                dt.Columns.Add("Durum");
+                dt.Columns.Add("Sayı");
+                dt.Columns.Add("Ürün Kodu");
+
+                for (int i = 0; i < rt.Count; i++)
+                {
+                    DataRow r = dt.NewRow();
+
+                    r["Durum"] = rt[i].Type;
+                    r["Sayı"] = rt[i].Count + " Adet";
+                    r["Ürün Kodu"] = rt[i].Definition;
+
+
+                    dt.Rows.Add(r);
+                }
+                dgv_list.DataSource = dt;
             }
             else
             {
@@ -107,326 +120,6 @@ namespace PersonalControl
         }
 
         private void loadGridSubat()
-        {
-            var result = dm.LogEntryListBySelectedSubat(
-                new DataAccessLayer.Product
-                {
-                    CastingDate = Convert.ToDateTime(dtp_dayCaontrol.Value.ToShortDateString()),
-                    CastingPersonalID = cb_employee.SelectedValue != null ? (int)cb_employee.SelectedValue : 0
-                });
-
-            dgv_list.DataSource = result;
-            var rt = result.OrderByDescending(r => r.ID).ToList();
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("Durum");
-            dt.Columns.Add("Sayı");
-            dt.Columns.Add("Ürün Kodu");
-
-            for (int i = 0; i < rt.Count; i++)
-            {
-                DataRow r = dt.NewRow();
-
-                r["Durum"] = rt[i].Type;
-                r["Sayı"] = rt[i].Count + " Adet";
-                r["Ürün Kodu"] = rt[i].Definition;
-
-
-                dt.Rows.Add(r);
-            }
-            dgv_list.DataSource = dt;
-
-        }
-
-        private void loadGridMart()
-        {
-            var result = dm.LogEntryListBySelectedMart(
-                new DataAccessLayer.Product
-                {
-                    CastingDate = Convert.ToDateTime(dtp_dayCaontrol.Value.ToShortDateString()),
-                    CastingPersonalID = cb_employee.SelectedValue != null ? (int)cb_employee.SelectedValue : 0
-                });
-
-            dgv_list.DataSource = result;
-            var rt = result.OrderByDescending(r => r.ID).ToList();
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("Durum");
-            dt.Columns.Add("Sayı");
-            dt.Columns.Add("Ürün Kodu");
-
-            for (int i = 0; i < rt.Count; i++)
-            {
-                DataRow r = dt.NewRow();
-
-                r["Durum"] = rt[i].Type;
-                r["Sayı"] = rt[i].Count + " Adet";
-                r["Ürün Kodu"] = rt[i].Definition;
-
-
-                dt.Rows.Add(r);
-            }
-            dgv_list.DataSource = dt;
-
-        }
-
-        private void loadGridNisan()
-        {
-            var result = dm.LogEntryListBySelectedNisan(
-                new DataAccessLayer.Product
-                {
-                    CastingDate = Convert.ToDateTime(dtp_dayCaontrol.Value.ToShortDateString()),
-                    CastingPersonalID = cb_employee.SelectedValue != null ? (int)cb_employee.SelectedValue : 0
-                });
-
-            dgv_list.DataSource = result;
-            var rt = result.OrderByDescending(r => r.ID).ToList();
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("Durum");
-            dt.Columns.Add("Sayı");
-            dt.Columns.Add("Ürün Kodu");
-
-            for (int i = 0; i < rt.Count; i++)
-            {
-                DataRow r = dt.NewRow();
-
-                r["Durum"] = rt[i].Type;
-                r["Sayı"] = rt[i].Count + " Adet";
-                r["Ürün Kodu"] = rt[i].Definition;
-
-
-                dt.Rows.Add(r);
-            }
-            dgv_list.DataSource = dt;
-
-        }
-
-        private void loadGridMayis()
-        {
-            var result = dm.LogEntryListBySelectedMayis(
-                new DataAccessLayer.Product
-                {
-                    CastingDate = Convert.ToDateTime(dtp_dayCaontrol.Value.ToShortDateString()),
-                    CastingPersonalID = cb_employee.SelectedValue != null ? (int)cb_employee.SelectedValue : 0
-                });
-
-            dgv_list.DataSource = result;
-            var rt = result.OrderByDescending(r => r.ID).ToList();
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("Durum");
-            dt.Columns.Add("Sayı");
-            dt.Columns.Add("Ürün Kodu");
-
-            for (int i = 0; i < rt.Count; i++)
-            {
-                DataRow r = dt.NewRow();
-
-                r["Durum"] = rt[i].Type;
-                r["Sayı"] = rt[i].Count + " Adet";
-                r["Ürün Kodu"] = rt[i].Definition;
-
-
-                dt.Rows.Add(r);
-            }
-            dgv_list.DataSource = dt;
-
-        }
-
-        private void loadGridHaziran()
-        {
-            var result = dm.LogEntryListBySelectedHaziran(
-                new DataAccessLayer.Product
-                {
-                    CastingDate = Convert.ToDateTime(dtp_dayCaontrol.Value.ToShortDateString()),
-                    CastingPersonalID = cb_employee.SelectedValue != null ? (int)cb_employee.SelectedValue : 0
-                });
-
-            dgv_list.DataSource = result;
-            var rt = result.OrderByDescending(r => r.ID).ToList();
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("Durum");
-            dt.Columns.Add("Sayı");
-            dt.Columns.Add("Ürün Kodu");
-
-            for (int i = 0; i < rt.Count; i++)
-            {
-                DataRow r = dt.NewRow();
-
-                r["Durum"] = rt[i].Type;
-                r["Sayı"] = rt[i].Count + " Adet";
-                r["Ürün Kodu"] = rt[i].Definition;
-
-
-                dt.Rows.Add(r);
-            }
-            dgv_list.DataSource = dt;
-
-        }
-
-        private void loadGridTemmuz()
-        {
-            var result = dm.LogEntryListBySelectedTemmuz(
-                new DataAccessLayer.Product
-                {
-                    CastingDate = Convert.ToDateTime(dtp_dayCaontrol.Value.ToShortDateString()),
-                    CastingPersonalID = cb_employee.SelectedValue != null ? (int)cb_employee.SelectedValue : 0
-                });
-
-            dgv_list.DataSource = result;
-            var rt = result.OrderByDescending(r => r.ID).ToList();
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("Durum");
-            dt.Columns.Add("Sayı");
-            dt.Columns.Add("Ürün Kodu");
-
-            for (int i = 0; i < rt.Count; i++)
-            {
-                DataRow r = dt.NewRow();
-
-                r["Durum"] = rt[i].Type;
-                r["Sayı"] = rt[i].Count + " Adet";
-                r["Ürün Kodu"] = rt[i].Definition;
-
-
-                dt.Rows.Add(r);
-            }
-            dgv_list.DataSource = dt;
-
-        }
-
-        private void loadGridAgustos()
-        {
-            var result = dm.LogEntryListBySelectedAgustos(
-                new DataAccessLayer.Product
-                {
-                    CastingDate = Convert.ToDateTime(dtp_dayCaontrol.Value.ToShortDateString()),
-                    CastingPersonalID = cb_employee.SelectedValue != null ? (int)cb_employee.SelectedValue : 0
-                });
-
-            dgv_list.DataSource = result;
-            var rt = result.OrderByDescending(r => r.ID).ToList();
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("Durum");
-            dt.Columns.Add("Sayı");
-            dt.Columns.Add("Ürün Kodu");
-
-            for (int i = 0; i < rt.Count; i++)
-            {
-                DataRow r = dt.NewRow();
-
-                r["Durum"] = rt[i].Type;
-                r["Sayı"] = rt[i].Count + " Adet";
-                r["Ürün Kodu"] = rt[i].Definition;
-
-
-                dt.Rows.Add(r);
-            }
-            dgv_list.DataSource = dt;
-
-        }
-
-        private void loadGridEylul()
-        {
-            var result = dm.LogEntryListBySelectedEylul(
-                new DataAccessLayer.Product
-                {
-                    CastingDate = Convert.ToDateTime(dtp_dayCaontrol.Value.ToShortDateString()),
-                    CastingPersonalID = cb_employee.SelectedValue != null ? (int)cb_employee.SelectedValue : 0
-                });
-
-            dgv_list.DataSource = result;
-            var rt = result.OrderByDescending(r => r.ID).ToList();
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("Durum");
-            dt.Columns.Add("Sayı");
-            dt.Columns.Add("Ürün Kodu");
-
-            for (int i = 0; i < rt.Count; i++)
-            {
-                DataRow r = dt.NewRow();
-
-                r["Durum"] = rt[i].Type;
-                r["Sayı"] = rt[i].Count + " Adet";
-                r["Ürün Kodu"] = rt[i].Definition;
-
-
-                dt.Rows.Add(r);
-            }
-            dgv_list.DataSource = dt;
-
-        }
-
-        private void loadGridEkim()
-        {
-            var result = dm.LogEntryListBySelectedEkim(
-                new DataAccessLayer.Product
-                {
-                    CastingDate = Convert.ToDateTime(dtp_dayCaontrol.Value.ToShortDateString()),
-                    CastingPersonalID = cb_employee.SelectedValue != null ? (int)cb_employee.SelectedValue : 0
-                });
-
-            dgv_list.DataSource = result;
-            var rt = result.OrderByDescending(r => r.ID).ToList();
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("Durum");
-            dt.Columns.Add("Sayı");
-            dt.Columns.Add("Ürün Kodu");
-
-            for (int i = 0; i < rt.Count; i++)
-            {
-                DataRow r = dt.NewRow();
-
-                r["Durum"] = rt[i].Type;
-                r["Sayı"] = rt[i].Count + " Adet";
-                r["Ürün Kodu"] = rt[i].Definition;
-
-
-                dt.Rows.Add(r);
-            }
-            dgv_list.DataSource = dt;
-
-        }
-
-        private void loadGridKasim()
-        {
-            var result = dm.LogEntryListBySelectedKasim(
-                new DataAccessLayer.Product
-                {
-                    CastingDate = Convert.ToDateTime(dtp_dayCaontrol.Value.ToShortDateString()),
-                    CastingPersonalID = cb_employee.SelectedValue != null ? (int)cb_employee.SelectedValue : 0
-                });
-
-            dgv_list.DataSource = result;
-            var rt = result.OrderByDescending(r => r.ID).ToList();
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("Durum");
-            dt.Columns.Add("Sayı");
-            dt.Columns.Add("Ürün Kodu");
-
-            for (int i = 0; i < rt.Count; i++)
-            {
-                DataRow r = dt.NewRow();
-
-                r["Durum"] = rt[i].Type;
-                r["Sayı"] = rt[i].Count + " Adet";
-                r["Ürün Kodu"] = rt[i].Definition;
-
-
-                dt.Rows.Add(r);
-            }
-            dgv_list.DataSource = dt;
-
-        }
-
-        private void loadGridAralik()
         {
             // Personel seçilmediyse, işlem yapmadan metodu sonlandır
             if (cb_employee.SelectedValue == null)
@@ -447,10 +140,10 @@ namespace PersonalControl
                 string selectedMonthName = selectedItem.ToString();
 
                 // Ay ismini ayın numerik değerine dönüştür
-                selectedMonth = DateTime.ParseExact(selectedMonthName, "MMMMyyyy", CultureInfo.CurrentCulture).Month;
+                selectedMonth = DateTime.ParseExact(selectedMonthName, "MMMM", CultureInfo.CurrentCulture).Month;
 
                 // Veritabanından verileri al
-                var result = dm.LogEntryListBySelectedOcak(new DataAccessLayer.Product
+                var result = dm.LogEntryListBySelectedSubat(new DataAccessLayer.Product
                 {
                     SelectedMonth = selectedMonth,
                     CastingPersonalID = (int)cb_employee.SelectedValue
@@ -477,6 +170,588 @@ namespace PersonalControl
                     dt.Rows.Add(r);
                 }
                 dgv_list.DataSource = dt;
+            }
+            else
+            {
+                MessageBox.Show("Geçerli bir tarih seçiniz.");
+            }
+
+        }
+
+        private void loadGridMart()
+        {
+            // Personel seçilmediyse, işlem yapmadan metodu sonlandır
+            if (cb_employee.SelectedValue == null)
+            {
+                return;
+            }
+
+            // Ay bilgisini al
+            int selectedMonth = 1; // Ocak ayını temsil eden değer
+
+            // Seçili öğe varsa devam et
+            if (cb_moonControl.SelectedItem != null)
+            {
+                // Seçili öğeyi al
+                var selectedItem = cb_moonControl.SelectedItem;
+
+                // Ay ismini al
+                string selectedMonthName = selectedItem.ToString();
+
+                // Ay ismini ayın numerik değerine dönüştür
+                selectedMonth = DateTime.ParseExact(selectedMonthName, "MMMM", CultureInfo.CurrentCulture).Month;
+
+                // Veritabanından verileri al
+                var result = dm.LogEntryListBySelectedMart(new DataAccessLayer.Product
+                {
+                    SelectedMonth = selectedMonth,
+                    CastingPersonalID = (int)cb_employee.SelectedValue
+                });
+
+                // DataGridView'e sorgu sonucunu yükle
+                dgv_list.DataSource = result;
+                var rt = result.OrderByDescending(r => r.ID).ToList();
+                DataTable dt = new DataTable();
+
+                dt.Columns.Add("Durum");
+                dt.Columns.Add("Sayı");
+                dt.Columns.Add("Ürün Kodu");
+
+                for (int i = 0; i < rt.Count; i++)
+                {
+                    DataRow r = dt.NewRow();
+
+                    r["Durum"] = rt[i].Type;
+                    r["Sayı"] = rt[i].Count + " Adet";
+                    r["Ürün Kodu"] = rt[i].Definition;
+
+
+                    dt.Rows.Add(r);
+                }
+                dgv_list.DataSource = dt;
+            }
+            else
+            {
+                MessageBox.Show("Geçerli bir tarih seçiniz.");
+            }
+        }
+
+        private void loadGridNisan()
+        {
+            // Personel seçilmediyse, işlem yapmadan metodu sonlandır
+            if (cb_employee.SelectedValue == null)
+            {
+                return;
+            }
+
+            // Ay bilgisini al
+            int selectedMonth = 1; // Ocak ayını temsil eden değer
+
+            // Seçili öğe varsa devam et
+            if (cb_moonControl.SelectedItem != null)
+            {
+                // Seçili öğeyi al
+                var selectedItem = cb_moonControl.SelectedItem;
+
+                // Ay ismini al
+                string selectedMonthName = selectedItem.ToString();
+
+                // Ay ismini ayın numerik değerine dönüştür
+                selectedMonth = DateTime.ParseExact(selectedMonthName, "MMMM", CultureInfo.CurrentCulture).Month;
+
+                // Veritabanından verileri al
+                var result = dm.LogEntryListBySelectedNisan(new DataAccessLayer.Product
+                {
+                    SelectedMonth = selectedMonth,
+                    CastingPersonalID = (int)cb_employee.SelectedValue
+                });
+
+                // DataGridView'e sorgu sonucunu yükle
+                dgv_list.DataSource = result;
+                var rt = result.OrderByDescending(r => r.ID).ToList();
+                DataTable dt = new DataTable();
+
+                dt.Columns.Add("Durum");
+                dt.Columns.Add("Sayı");
+                dt.Columns.Add("Ürün Kodu");
+
+                for (int i = 0; i < rt.Count; i++)
+                {
+                    DataRow r = dt.NewRow();
+
+                    r["Durum"] = rt[i].Type;
+                    r["Sayı"] = rt[i].Count + " Adet";
+                    r["Ürün Kodu"] = rt[i].Definition;
+
+
+                    dt.Rows.Add(r);
+                }
+                dgv_list.DataSource = dt;
+            }
+            else
+            {
+                MessageBox.Show("Geçerli bir tarih seçiniz.");
+            }
+        }
+
+        private void loadGridMayis()
+        {
+            // Personel seçilmediyse, işlem yapmadan metodu sonlandır
+            if (cb_employee.SelectedValue == null)
+            {
+                return;
+            }
+
+            // Ay bilgisini al
+            int selectedMonth = 1; // Ocak ayını temsil eden değer
+
+            // Seçili öğe varsa devam et
+            if (cb_moonControl.SelectedItem != null)
+            {
+                // Seçili öğeyi al
+                var selectedItem = cb_moonControl.SelectedItem;
+
+                // Ay ismini al
+                string selectedMonthName = selectedItem.ToString();
+
+                // Ay ismini ayın numerik değerine dönüştür
+                selectedMonth = DateTime.ParseExact(selectedMonthName, "MMMM", CultureInfo.CurrentCulture).Month;
+
+                // Veritabanından verileri al
+                var result = dm.LogEntryListBySelectedMayis(new DataAccessLayer.Product
+                {
+                    SelectedMonth = selectedMonth,
+                    CastingPersonalID = (int)cb_employee.SelectedValue
+                });
+
+                // DataGridView'e sorgu sonucunu yükle
+                dgv_list.DataSource = result;
+                var rt = result.OrderByDescending(r => r.ID).ToList();
+                DataTable dt = new DataTable();
+
+                dt.Columns.Add("Durum");
+                dt.Columns.Add("Sayı");
+                dt.Columns.Add("Ürün Kodu");
+
+                for (int i = 0; i < rt.Count; i++)
+                {
+                    DataRow r = dt.NewRow();
+
+                    r["Durum"] = rt[i].Type;
+                    r["Sayı"] = rt[i].Count + " Adet";
+                    r["Ürün Kodu"] = rt[i].Definition;
+
+
+                    dt.Rows.Add(r);
+                }
+                dgv_list.DataSource = dt;
+            }
+            else
+            {
+                MessageBox.Show("Geçerli bir tarih seçiniz.");
+            }
+        }
+
+        private void loadGridHaziran()
+        {
+            // Personel seçilmediyse, işlem yapmadan metodu sonlandır
+            if (cb_employee.SelectedValue == null)
+            {
+                return;
+            }
+
+            // Ay bilgisini al
+            int selectedMonth = 1; // Ocak ayını temsil eden değer
+
+            // Seçili öğe varsa devam et
+            if (cb_moonControl.SelectedItem != null)
+            {
+                // Seçili öğeyi al
+                var selectedItem = cb_moonControl.SelectedItem;
+
+                // Ay ismini al
+                string selectedMonthName = selectedItem.ToString();
+
+                // Ay ismini ayın numerik değerine dönüştür
+                selectedMonth = DateTime.ParseExact(selectedMonthName, "MMMM", CultureInfo.CurrentCulture).Month;
+
+                // Veritabanından verileri al
+                var result = dm.LogEntryListBySelectedHaziran(new DataAccessLayer.Product
+                {
+                    SelectedMonth = selectedMonth,
+                    CastingPersonalID = (int)cb_employee.SelectedValue
+                });
+
+                // DataGridView'e sorgu sonucunu yükle
+                dgv_list.DataSource = result;
+                var rt = result.OrderByDescending(r => r.ID).ToList();
+                DataTable dt = new DataTable();
+
+                dt.Columns.Add("Durum");
+                dt.Columns.Add("Sayı");
+                dt.Columns.Add("Ürün Kodu");
+
+                for (int i = 0; i < rt.Count; i++)
+                {
+                    DataRow r = dt.NewRow();
+
+                    r["Durum"] = rt[i].Type;
+                    r["Sayı"] = rt[i].Count + " Adet";
+                    r["Ürün Kodu"] = rt[i].Definition;
+
+
+                    dt.Rows.Add(r);
+                }
+                dgv_list.DataSource = dt;
+            }
+            else
+            {
+                MessageBox.Show("Geçerli bir tarih seçiniz.");
+            }
+        }
+
+        private void loadGridTemmuz()
+        {
+            // Personel seçilmediyse, işlem yapmadan metodu sonlandır
+            if (cb_employee.SelectedValue == null)
+            {
+                return;
+            }
+
+            // Ay bilgisini al
+            int selectedMonth = 1; // Ocak ayını temsil eden değer
+
+            // Seçili öğe varsa devam et
+            if (cb_moonControl.SelectedItem != null)
+            {
+                // Seçili öğeyi al
+                var selectedItem = cb_moonControl.SelectedItem;
+
+                // Ay ismini al
+                string selectedMonthName = selectedItem.ToString();
+
+                // Ay ismini ayın numerik değerine dönüştür
+                selectedMonth = DateTime.ParseExact(selectedMonthName, "MMMMyyyy", CultureInfo.CurrentCulture).Month;
+
+                // Veritabanından verileri al
+                var result = dm.LogEntryListBySelectedTemmuz(new DataAccessLayer.Product
+                {
+                    SelectedMonth = selectedMonth,
+                    CastingPersonalID = (int)cb_employee.SelectedValue
+                });
+
+                // DataGridView'e sorgu sonucunu yükle
+                dgv_list.DataSource = result;
+                var rt = result.OrderByDescending(r => r.ID).ToList();
+                DataTable dt = new DataTable();
+
+                dt.Columns.Add("Durum");
+                dt.Columns.Add("Sayı");
+                dt.Columns.Add("Ürün Kodu");
+
+                for (int i = 0; i < rt.Count; i++)
+                {
+                    DataRow r = dt.NewRow();
+
+                    r["Durum"] = rt[i].Type;
+                    r["Sayı"] = rt[i].Count + " Adet";
+                    r["Ürün Kodu"] = rt[i].Definition;
+
+
+                    dt.Rows.Add(r);
+                }
+                dgv_list.DataSource = dt;
+            }
+            else
+            {
+                MessageBox.Show("Geçerli bir tarih seçiniz.");
+            }
+        }
+
+        private void loadGridAgustos()
+        {// Personel seçilmediyse, işlem yapmadan metodu sonlandır
+            if (cb_employee.SelectedValue == null)
+            {
+                return;
+            }
+
+            // Ay bilgisini al
+            int selectedMonth = 1; // Ocak ayını temsil eden değer
+
+            // Seçili öğe varsa devam et
+            if (cb_moonControl.SelectedItem != null)
+            {
+                // Seçili öğeyi al
+                var selectedItem = cb_moonControl.SelectedItem;
+
+                // Ay ismini al
+                string selectedMonthName = selectedItem.ToString();
+
+                // Ay ismini ayın numerik değerine dönüştür
+                selectedMonth = DateTime.ParseExact(selectedMonthName, "MMMMyyyy", CultureInfo.CurrentCulture).Month;
+
+                // Veritabanından verileri al
+                var result = dm.LogEntryListBySelectedAgustos(new DataAccessLayer.Product
+                {
+                    SelectedMonth = selectedMonth,
+                    CastingPersonalID = (int)cb_employee.SelectedValue
+                });
+
+                // DataGridView'e sorgu sonucunu yükle
+                dgv_list.DataSource = result;
+                var rt = result.OrderByDescending(r => r.ID).ToList();
+                DataTable dt = new DataTable();
+
+                dt.Columns.Add("Durum");
+                dt.Columns.Add("Sayı");
+                dt.Columns.Add("Ürün Kodu");
+
+                for (int i = 0; i < rt.Count; i++)
+                {
+                    DataRow r = dt.NewRow();
+
+                    r["Durum"] = rt[i].Type;
+                    r["Sayı"] = rt[i].Count + " Adet";
+                    r["Ürün Kodu"] = rt[i].Definition;
+
+
+                    dt.Rows.Add(r);
+                }
+                dgv_list.DataSource = dt;
+            }
+            else
+            {
+                MessageBox.Show("Geçerli bir tarih seçiniz.");
+            }
+        }
+
+        private void loadGridEylul()
+        {
+            // Personel seçilmediyse, işlem yapmadan metodu sonlandır
+            if (cb_employee.SelectedValue == null)
+            {
+                return;
+            }
+
+            // Ay bilgisini al
+            int selectedMonth = 1; // Ocak ayını temsil eden değer
+
+            // Seçili öğe varsa devam et
+            if (cb_moonControl.SelectedItem != null)
+            {
+                // Seçili öğeyi al
+                var selectedItem = cb_moonControl.SelectedItem;
+
+                // Ay ismini al
+                string selectedMonthName = selectedItem.ToString();
+
+                // Ay ismini ayın numerik değerine dönüştür
+                selectedMonth = DateTime.ParseExact(selectedMonthName, "MMMMyyyy", CultureInfo.CurrentCulture).Month;
+
+                // Veritabanından verileri al
+                var result = dm.LogEntryListBySelectedEylul(new DataAccessLayer.Product
+                {
+                    SelectedMonth = selectedMonth,
+                    CastingPersonalID = (int)cb_employee.SelectedValue
+                });
+
+                // DataGridView'e sorgu sonucunu yükle
+                dgv_list.DataSource = result;
+                var rt = result.OrderByDescending(r => r.ID).ToList();
+                DataTable dt = new DataTable();
+
+                dt.Columns.Add("Durum");
+                dt.Columns.Add("Sayı");
+                dt.Columns.Add("Ürün Kodu");
+
+                for (int i = 0; i < rt.Count; i++)
+                {
+                    DataRow r = dt.NewRow();
+
+                    r["Durum"] = rt[i].Type;
+                    r["Sayı"] = rt[i].Count + " Adet";
+                    r["Ürün Kodu"] = rt[i].Definition;
+
+
+                    dt.Rows.Add(r);
+                }
+                dgv_list.DataSource = dt;
+            }
+            else
+            {
+                MessageBox.Show("Geçerli bir tarih seçiniz.");
+            }
+        }
+
+        private void loadGridEkim()
+        {// Personel seçilmediyse, işlem yapmadan metodu sonlandır
+            if (cb_employee.SelectedValue == null)
+            {
+                return;
+            }
+
+            // Ay bilgisini al
+            int selectedMonth = 1; // Ocak ayını temsil eden değer
+
+            // Seçili öğe varsa devam et
+            if (cb_moonControl.SelectedItem != null)
+            {
+                // Seçili öğeyi al
+                var selectedItem = cb_moonControl.SelectedItem;
+
+                // Ay ismini al
+                string selectedMonthName = selectedItem.ToString();
+
+                // Ay ismini ayın numerik değerine dönüştür
+                selectedMonth = DateTime.ParseExact(selectedMonthName, "MMMMyyyy", CultureInfo.CurrentCulture).Month;
+
+                // Veritabanından verileri al
+                var result = dm.LogEntryListBySelectedEkim(new DataAccessLayer.Product
+                {
+                    SelectedMonth = selectedMonth,
+                    CastingPersonalID = (int)cb_employee.SelectedValue
+                });
+
+                // DataGridView'e sorgu sonucunu yükle
+                dgv_list.DataSource = result;
+                var rt = result.OrderByDescending(r => r.ID).ToList();
+                DataTable dt = new DataTable();
+
+                dt.Columns.Add("Durum");
+                dt.Columns.Add("Sayı");
+                dt.Columns.Add("Ürün Kodu");
+
+                for (int i = 0; i < rt.Count; i++)
+                {
+                    DataRow r = dt.NewRow();
+
+                    r["Durum"] = rt[i].Type;
+                    r["Sayı"] = rt[i].Count + " Adet";
+                    r["Ürün Kodu"] = rt[i].Definition;
+
+
+                    dt.Rows.Add(r);
+                }
+                dgv_list.DataSource = dt;
+            }
+            else
+            {
+                MessageBox.Show("Geçerli bir tarih seçiniz.");
+            }
+        }
+
+        private void loadGridKasim()
+        {
+            // Personel seçilmediyse, işlem yapmadan metodu sonlandır
+            if (cb_employee.SelectedValue == null)
+            {
+                return;
+            }
+
+            // Ay bilgisini al
+            int selectedMonth = 1; // Ocak ayını temsil eden değer
+
+            // Seçili öğe varsa devam et
+            if (cb_moonControl.SelectedItem != null)
+            {
+                // Seçili öğeyi al
+                var selectedItem = cb_moonControl.SelectedItem;
+
+                // Ay ismini al
+                string selectedMonthName = selectedItem.ToString();
+
+                // Ay ismini ayın numerik değerine dönüştür
+                selectedMonth = DateTime.ParseExact(selectedMonthName, "MMMMyyyy", CultureInfo.CurrentCulture).Month;
+
+                // Veritabanından verileri al
+                var result = dm.LogEntryListBySelectedKasim(new DataAccessLayer.Product
+                {
+                    SelectedMonth = selectedMonth,
+                    CastingPersonalID = (int)cb_employee.SelectedValue
+                });
+
+                // DataGridView'e sorgu sonucunu yükle
+                dgv_list.DataSource = result;
+                var rt = result.OrderByDescending(r => r.ID).ToList();
+                DataTable dt = new DataTable();
+
+                dt.Columns.Add("Durum");
+                dt.Columns.Add("Sayı");
+                dt.Columns.Add("Ürün Kodu");
+
+                for (int i = 0; i < rt.Count; i++)
+                {
+                    DataRow r = dt.NewRow();
+
+                    r["Durum"] = rt[i].Type;
+                    r["Sayı"] = rt[i].Count + " Adet";
+                    r["Ürün Kodu"] = rt[i].Definition;
+
+
+                    dt.Rows.Add(r);
+                }
+                dgv_list.DataSource = dt;
+            }
+            else
+            {
+                MessageBox.Show("Geçerli bir tarih seçiniz.");
+            }
+        }
+
+        private void loadGridAralik()
+        {// Personel seçilmediyse, işlem yapmadan metodu sonlandır
+            if (cb_employee.SelectedValue == null)
+            {
+                return;
+            }
+
+            // Ay bilgisini al
+            int selectedMonth = 1; // Ocak ayını temsil eden değer
+
+            // Seçili öğe varsa devam et
+            if (cb_moonControl.SelectedItem != null)
+            {
+                // Seçili öğeyi al
+                var selectedItem = cb_moonControl.SelectedItem;
+
+                // Ay ismini al
+                string selectedMonthName = selectedItem.ToString();
+
+                // Ay ismini ayın numerik değerine dönüştür
+                selectedMonth = DateTime.ParseExact(selectedMonthName, "MMMMyyyy", CultureInfo.CurrentCulture).Month;
+
+                // Veritabanından verileri al
+                var result = dm.LogEntryListBySelectedAralik(new DataAccessLayer.Product
+                {
+                    SelectedMonth = selectedMonth,
+                    CastingPersonalID = (int)cb_employee.SelectedValue
+                });
+
+                // DataGridView'e sorgu sonucunu yükle
+                dgv_list.DataSource = result;
+                var rt = result.OrderByDescending(r => r.ID).ToList();
+                DataTable dt = new DataTable();
+
+                dt.Columns.Add("Durum");
+                dt.Columns.Add("Sayı");
+                dt.Columns.Add("Ürün Kodu");
+
+                for (int i = 0; i < rt.Count; i++)
+                {
+                    DataRow r = dt.NewRow();
+
+                    r["Durum"] = rt[i].Type;
+                    r["Sayı"] = rt[i].Count + " Adet";
+                    r["Ürün Kodu"] = rt[i].Definition;
+
+
+                    dt.Rows.Add(r);
+                }
+                dgv_list.DataSource = dt;
+            }
+            else
+            {
+                MessageBox.Show("Geçerli bir tarih seçiniz.");
             }
         }
 
@@ -555,5 +830,6 @@ namespace PersonalControl
                     break;
             }
         }
+
     }
 }
