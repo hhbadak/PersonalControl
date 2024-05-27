@@ -102,10 +102,24 @@
             // cb_moonControl
             // 
             this.cb_moonControl.FormattingEnabled = true;
+            this.cb_moonControl.Items.AddRange(new object[] {
+            "Ocak",
+            "Şubat",
+            "Mart",
+            "Nisan",
+            "Mayıs",
+            "Haziran",
+            "Temmuz2023",
+            "Ağustos2023",
+            "Eylül2023",
+            "Ekim2023",
+            "Kasım2023",
+            "Aralık2023"});
             this.cb_moonControl.Location = new System.Drawing.Point(340, 54);
             this.cb_moonControl.Name = "cb_moonControl";
             this.cb_moonControl.Size = new System.Drawing.Size(121, 21);
             this.cb_moonControl.TabIndex = 3;
+            this.cb_moonControl.SelectedIndexChanged += new System.EventHandler(this.cb_moonControl_SelectedIndexChanged);
             // 
             // dtp_dayCaontrol
             // 

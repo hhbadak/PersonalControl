@@ -32,5 +32,6 @@ namespace DataAccessLayer
         public int Count { get; set; }
         public string Code { get; set; }
         public string RetouchFire { get; set; }
+        public int SelectedMonth { get; set; }
     }
 }

@@ -47,57 +47,27 @@ namespace DataAccessLayer
             List<Product> results = new List<Product>();
             try
             {
-                cmd.CommandText = @"
-                SELECT 'Kayıp' AS Tür, COUNT(*) AS Adet, kl.Tanim AS Tanim
-                FROM UT_D_Urunler u
-                LEFT JOIN Products p ON u.BarkodNo = p.Barcode
-                LEFT JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
-                WHERE p.Barcode IS NULL
-                    AND u.DokumcuId = @employee 
-                    AND u.DokumTarih = @selectedDate
-                GROUP BY kl.Tanim
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
+                            FROM (
+                                SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+                                FROM UT_D_Urunler u
+                                JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+                                WHERE u.DokumcuId = @employee
+                                    AND u.DokumTarih = @selectedDate
+                                GROUP BY kl.tanim
 
-                UNION ALL
+                                UNION ALL
 
-                SELECT COALESCE(h.HataTanim, 'Döküm') AS Tür, COUNT(*) AS Adet, kl.Tanim AS Tanim
-                FROM UT_D_Urunler u
-                LEFT JOIN UT_DokumHatalari h ON h.Id = u.HataId
-                LEFT JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
-                WHERE u.DokumcuId = @employee 
-                    AND u.DokumTarih = @selectedDate
-                GROUP BY COALESCE(h.HataTanim, 'Döküm'), kl.Tanim
-
-                UNION ALL 
-
-                SELECT kl.Tanim AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
-                FROM Products p
-                LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
-                LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
-                WHERE p.CastPersonal = @employee 
-                    AND p.CastDate = @selectedDate
-                GROUP BY p.Quality, kl.Tanim, kol.tanim
-
-                UNION ALL
-
-                SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
-                FROM RotusTakip rt
-                JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo
-                JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
-                JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID
-                WHERE u.DokumTarih = @selectedDate
-                    AND u.DokumcuId = @employee
-                GROUP BY kl.tanim, rh.HataTanim
-
-                UNION ALL
-
-                SELECT 'Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
-                FROM UT_D_Urunler u
-                JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
-                WHERE u.DokumcuId = @employee
-                    AND u.DokumTarih = @selectedDate
-                GROUP BY kl.tanim
-
-                ORDER BY Tanim DESC";
+                                SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+                                FROM Products p
+                                LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+                                LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+                                WHERE p.CastPersonal = @employee
+                                    AND p.CastDate = @selectedDate
+                                GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+                            ) AS TumUrunler
+                            GROUP BY Tür, Tanim
+                            ORDER BY Tanim ASC, Tür ASC";
 
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
@@ -109,13 +79,9 @@ namespace DataAccessLayer
                     while (reader.Read())
                     {
                         Product result = new Product();
-                        result.Type = reader.GetString(0); // Tür
-                        result.Count = reader.GetInt32(1); // Adet
-                        result.Definition = !reader.IsDBNull(2) ? reader.GetString(2) : null; // Tanim
-
-                        // result.Quality'yı GetByte() ile almak yerine GetInt32() veya GetInt32() kullanabiliriz.
-                        // GetByte() kullanımı hataya yol açabileceğinden alternatif kullanımı tercih ediyoruz.
-                        result.Quality = !reader.IsDBNull(1) ? (byte)reader.GetInt32(1) : (byte)0; // Quality
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
 
                         results.Add(result);
                     }
@@ -129,8 +95,689 @@ namespace DataAccessLayer
                 return null;
             }
             finally { con.Close(); }
-
         }
+
+        public List<Product> LogEntryListBySelectedOcak(Product p)
+        {
+            List<Product> results = new List<Product>();
+            try
+            {
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
+FROM (
+    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    FROM UT_D_Urunler u
+    JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+    WHERE u.DokumcuId = @employee
+        AND u.DokumTarih >= '2024-01-01' -- Nisan 2024'ün ilk günü
+        AND u.DokumTarih < '2024-02-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.tanim
+
+    UNION ALL
+
+    SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+    FROM Products p
+    LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+    LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+    WHERE p.CastPersonal = @employee
+        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+) AS TumUrunler
+GROUP BY Tür, Tanim
+ORDER BY Tanim ASC, Tür ASC;";
+
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product result = new Product();
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
+
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // Hata mesajını loglayın ya da uygun şekilde yönetin
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally { con.Close(); }
+        }
+
+        public List<Product> LogEntryListBySelectedSubat(Product p)
+        {
+            List<Product> results = new List<Product>();
+            try
+            {
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
+FROM (
+    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    FROM UT_D_Urunler u
+    JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+    WHERE u.DokumcuId = @employee
+        AND u.DokumTarih >= '2024-02-01' -- Nisan 2024'ün ilk günü
+        AND u.DokumTarih < '2024-03-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.tanim
+
+    UNION ALL
+
+    SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+    FROM Products p
+    LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+    LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+    WHERE p.CastPersonal = @employee
+        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+) AS TumUrunler
+GROUP BY Tür, Tanim
+ORDER BY Tanim ASC, Tür ASC;";
+
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
+                cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product result = new Product();
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
+
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // Hata mesajını loglayın ya da uygun şekilde yönetin
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally { con.Close(); }
+        }
+
+        public List<Product> LogEntryListBySelectedMart(Product p)
+        {
+            List<Product> results = new List<Product>();
+            try
+            {
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
+FROM (
+    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    FROM UT_D_Urunler u
+    JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+    WHERE u.DokumcuId = @employee
+        AND u.DokumTarih >= '2024-03-01' -- Nisan 2024'ün ilk günü
+        AND u.DokumTarih < '2024-04-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.tanim
+
+    UNION ALL
+
+    SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+    FROM Products p
+    LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+    LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+    WHERE p.CastPersonal = @employee
+        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+) AS TumUrunler
+GROUP BY Tür, Tanim
+ORDER BY Tanim ASC, Tür ASC;";
+
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
+                cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product result = new Product();
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
+
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // Hata mesajını loglayın ya da uygun şekilde yönetin
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally { con.Close(); }
+        }
+
+        public List<Product> LogEntryListBySelectedNisan(Product p)
+        {
+            List<Product> results = new List<Product>();
+            try
+            {
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
+FROM (
+    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    FROM UT_D_Urunler u
+    JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+    WHERE u.DokumcuId = @employee
+        AND u.DokumTarih >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND u.DokumTarih < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.tanim
+
+    UNION ALL
+
+    SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+    FROM Products p
+    LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+    LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+    WHERE p.CastPersonal = @employee
+        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+) AS TumUrunler
+GROUP BY Tür, Tanim
+ORDER BY Tanim ASC, Tür ASC;";
+
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
+                cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product result = new Product();
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
+
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // Hata mesajını loglayın ya da uygun şekilde yönetin
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally { con.Close(); }
+        }
+
+        public List<Product> LogEntryListBySelectedMayis(Product p)
+        {
+            List<Product> results = new List<Product>();
+            try
+            {
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
+FROM (
+    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    FROM UT_D_Urunler u
+    JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+    WHERE u.DokumcuId = @employee
+        AND u.DokumTarih >= '2024-05-01' -- Nisan 2024'ün ilk günü
+        AND u.DokumTarih < '2024-06-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.tanim
+
+    UNION ALL
+
+    SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+    FROM Products p
+    LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+    LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+    WHERE p.CastPersonal = @employee
+        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+) AS TumUrunler
+GROUP BY Tür, Tanim
+ORDER BY Tanim ASC, Tür ASC;";
+
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
+                cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product result = new Product();
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
+
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // Hata mesajını loglayın ya da uygun şekilde yönetin
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally { con.Close(); }
+        }
+
+        public List<Product> LogEntryListBySelectedHaziran(Product p)
+        {
+            List<Product> results = new List<Product>();
+            try
+            {
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
+FROM (
+    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    FROM UT_D_Urunler u
+    JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+    WHERE u.DokumcuId = @employee
+        AND u.DokumTarih >= '2024-06-01' -- Nisan 2024'ün ilk günü
+        AND u.DokumTarih < '2024-07-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.tanim
+
+    UNION ALL
+
+    SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+    FROM Products p
+    LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+    LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+    WHERE p.CastPersonal = @employee
+        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+) AS TumUrunler
+GROUP BY Tür, Tanim
+ORDER BY Tanim ASC, Tür ASC;";
+
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
+                cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product result = new Product();
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
+
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // Hata mesajını loglayın ya da uygun şekilde yönetin
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally { con.Close(); }
+        }
+
+        public List<Product> LogEntryListBySelectedTemmuz(Product p)
+        {
+            List<Product> results = new List<Product>();
+            try
+            {
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
+FROM (
+    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    FROM UT_D_Urunler u
+    JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+    WHERE u.DokumcuId = @employee
+        AND u.DokumTarih >= '2023-07-01' -- Nisan 2024'ün ilk günü
+        AND u.DokumTarih < '2023-08-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.tanim
+
+    UNION ALL
+
+    SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+    FROM Products p
+    LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+    LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+    WHERE p.CastPersonal = @employee
+        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+) AS TumUrunler
+GROUP BY Tür, Tanim
+ORDER BY Tanim ASC, Tür ASC;";
+
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
+                cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product result = new Product();
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
+
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // Hata mesajını loglayın ya da uygun şekilde yönetin
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally { con.Close(); }
+        }
+
+        public List<Product> LogEntryListBySelectedAgustos(Product p)
+        {
+            List<Product> results = new List<Product>();
+            try
+            {
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
+FROM (
+    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    FROM UT_D_Urunler u
+    JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+    WHERE u.DokumcuId = @employee
+        AND u.DokumTarih >= '2023-08-01' -- Nisan 2024'ün ilk günü
+        AND u.DokumTarih < '2023-09-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.tanim
+
+    UNION ALL
+
+    SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+    FROM Products p
+    LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+    LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+    WHERE p.CastPersonal = @employee
+        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+) AS TumUrunler
+GROUP BY Tür, Tanim
+ORDER BY Tanim ASC, Tür ASC;";
+
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
+                cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product result = new Product();
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
+
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // Hata mesajını loglayın ya da uygun şekilde yönetin
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally { con.Close(); }
+        }
+
+        public List<Product> LogEntryListBySelectedEylul(Product p)
+        {
+            List<Product> results = new List<Product>();
+            try
+            {
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
+FROM (
+    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    FROM UT_D_Urunler u
+    JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+    WHERE u.DokumcuId = @employee
+        AND u.DokumTarih >= '2023-09-01' -- Nisan 2024'ün ilk günü
+        AND u.DokumTarih < '2023-10-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.tanim
+
+    UNION ALL
+
+    SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+    FROM Products p
+    LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+    LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+    WHERE p.CastPersonal = @employee
+        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+) AS TumUrunler
+GROUP BY Tür, Tanim
+ORDER BY Tanim ASC, Tür ASC;";
+
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
+                cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product result = new Product();
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
+
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // Hata mesajını loglayın ya da uygun şekilde yönetin
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally { con.Close(); }
+        }
+
+        public List<Product> LogEntryListBySelectedEkim(Product p)
+        {
+            List<Product> results = new List<Product>();
+            try
+            {
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
+FROM (
+    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    FROM UT_D_Urunler u
+    JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+    WHERE u.DokumcuId = @employee
+        AND u.DokumTarih >= '2023-10-01' -- Nisan 2024'ün ilk günü
+        AND u.DokumTarih < '2023-11-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.tanim
+
+    UNION ALL
+
+    SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+    FROM Products p
+    LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+    LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+    WHERE p.CastPersonal = @employee
+        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+) AS TumUrunler
+GROUP BY Tür, Tanim
+ORDER BY Tanim ASC, Tür ASC;";
+
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
+                cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product result = new Product();
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
+
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // Hata mesajını loglayın ya da uygun şekilde yönetin
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally { con.Close(); }
+        }
+
+        public List<Product> LogEntryListBySelectedKasim(Product p)
+        {
+            List<Product> results = new List<Product>();
+            try
+            {
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
+FROM (
+    SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    FROM UT_D_Urunler u
+    JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+    WHERE u.DokumcuId = @employee
+        AND u.DokumTarih >= '2023-11-01' -- Nisan 2024'ün ilk günü
+        AND u.DokumTarih < '2023-12-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.tanim
+
+    UNION ALL
+
+    SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+    FROM Products p
+    LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+    LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+    WHERE p.CastPersonal = @employee
+        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+) AS TumUrunler
+GROUP BY Tür, Tanim
+ORDER BY Tanim ASC, Tür ASC;";
+
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
+                cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product result = new Product();
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
+
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // Hata mesajını loglayın ya da uygun şekilde yönetin
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally { con.Close(); }
+        }
+
+        public List<Product> LogEntryListBySelectedAralik(Product p)
+        {
+            List<Product> results = new List<Product>();
+            try
+            {
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet FROM (SELECT '.Dökülen Ürün Sayısı' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+    FROM UT_D_Urunler u
+    JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
+    WHERE u.DokumcuId = @employee
+        AND u.DokumTarih >= '2023-12-01' -- Nisan 2024'ün ilk günü
+        AND u.DokumTarih < '2024-01-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.tanim
+
+    UNION ALL
+
+    SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
+    FROM Products p
+    LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
+    LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
+    WHERE p.CastPersonal = @employee
+        AND p.CastDate >= '2024-04-01' -- Nisan 2024'ün ilk günü
+        AND p.CastDate < '2024-05-01' -- Mayıs 2024'ün ilk günü (bu tarih dahil değil)
+    GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+) AS TumUrunler
+GROUP BY Tür, Tanim
+ORDER BY Tanim ASC, Tür ASC;";
+
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@employee", p.CastingPersonalID);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product result = new Product();
+                        result.Type = !reader.IsDBNull(0) ? reader.GetString(0) : ""; // Tür
+                        result.Count = !reader.IsDBNull(2) ? reader.GetInt32(2) : 0; // ToplamAdet
+                        result.Definition = !reader.IsDBNull(1) ? reader.GetString(1) : ""; // Tanim
+
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // Hata mesajını loglayın ya da uygun şekilde yönetin
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally { con.Close(); }
+        }
+
+
     }
 
 }
