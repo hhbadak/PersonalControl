@@ -33,7 +33,8 @@ namespace PersonalControl
             var result = dm.LogEntryListBySelectedDate(
                 new DataAccessLayer.Product
                 {
-                    CastingDate = Convert.ToDateTime(dtp_dayCaontrol.Value.ToShortDateString())
+                    CastingDate = Convert.ToDateTime(dtp_dayCaontrol.Value.ToShortDateString()),
+                    CastingPersonalID = cb_employee.SelectedValue != null ? (int)cb_employee.SelectedValue : 0
                 });
 
             dgv_list.DataSource = result;
@@ -59,8 +60,8 @@ namespace PersonalControl
                 r["Döküm Hata"] = rt[i].Fault;
                 r["Rötuş Fire"] = rt[i].RetouchFire;
                 r["Kalite"] = rt[i].Quality;
-                r["Dökümcü"] = rt[i].CastingPersonal;
-                r["Döküm Tarihi"] = rt[i].CastDate;
+                r["Dökümcü Sicil No"] = rt[i].CastingPersonalID; // CastingPersonal
+                r["Döküm Tarihi"] = rt[i].CastingDate; // CastDate
 
                 dt.Rows.Add(r);
             }
@@ -72,8 +73,8 @@ namespace PersonalControl
         {
             if (cb_employee.SelectedValue != null)
             {
-                Product p =  new Product();
-                cb_employee.SelectedValue = p.CastingPersonalID;
+                Product p = new Product();
+                p.CastingPersonalID = (int)cb_employee.SelectedValue; // SelectedValue kullanarak ID'yi atama
                 loadGrid();
             }
         }
