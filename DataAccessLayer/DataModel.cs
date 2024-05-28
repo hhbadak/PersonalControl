@@ -47,27 +47,24 @@ namespace DataAccessLayer
             List<Product> results = new List<Product>();
             try
             {
-                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet
-                            FROM (
-                                SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
-                                FROM UT_D_Urunler u
-                                JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
-                                WHERE u.DokumcuId = @employee
-                                    AND u.DokumTarih = @selectedDate
-                                GROUP BY kl.tanim
-
-                                UNION ALL
-
-                                SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim
-                                FROM Products p
-                                LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
-                                LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
-                                WHERE p.CastPersonal = @employee
-                                    AND p.CastDate = @selectedDate
-                                GROUP BY kl.kaliteAd, kol.tanim, p.Quality
-                            ) AS TumUrunler
-                            GROUP BY Tür, Tanim
-                            ORDER BY Tanim ASC, Tür ASC;";
+                cmd.CommandText = @"SELECT Tür, Tanim, SUM(Adet) AS ToplamAdet FROM (SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim FROM UT_D_Urunler u 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+WHERE u.DokumcuId = @employee AND u.DokumTarih = @selectedDate 
+GROUP BY kl.tanim UNION ALL 
+SELECT kl.kaliteAd AS Tür, COUNT(*) AS Adet, kol.tanim AS Tanim FROM Products p 
+LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode 
+LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality 
+WHERE p.CastPersonal = @employee AND p.CastDate = @selectedDate 
+GROUP BY kl.kaliteAd, kol.tanim, p.Quality 
+UNION ALL 
+SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE u.DokumTarih = @selectedDate AND u.DokumcuId = @employee 
+GROUP BY kl.tanim, rh.HataTanim) AS TumUrunler 
+GROUP BY Tür, Tanim 
+ORDER BY Tanim ASC, Tür ASC;";
 
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("@selectedDate", p.CastingDate);
@@ -107,7 +104,7 @@ FROM (
     SELECT '.Döküm' AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
     FROM UT_D_Urunler u
     JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId
-    WHERE u.DokumcuId = @employee
+    WHERE u.DokumcuId = 11
         AND u.DokumTarih >= '2024-01-01'
         AND u.DokumTarih < '2024-02-01' 
     GROUP BY kl.tanim
@@ -118,11 +115,21 @@ FROM (
     FROM Products p
     LEFT JOIN kod_liste kol ON kol.Kimlik = p.ProductCode
     LEFT JOIN kalite_liste kl ON kl.Kimlik = p.Quality
-    WHERE p.CastPersonal = @employee
+    WHERE p.CastPersonal = 11
         AND p.CastDate >= '2024-01-01'
         AND p.CastDate < '2024-02-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
-) AS TumUrunler
+
+	UNION ALL
+
+	SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE  u.DokumTarih >=  '2024-01-01'
+    AND u.DokumTarih < '2024-02-01' AND u.DokumcuId = 11
+GROUP BY kl.tanim, rh.HataTanim) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
 
@@ -178,6 +185,16 @@ FROM (
         AND p.CastDate >= '2024-02-01'
         AND p.CastDate < '2024-03-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+UNION ALL
+
+	SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE  u.DokumTarih >=  '2024-02-01''
+    AND u.DokumTarih < '2024-03-01'  AND u.DokumcuId = 11
+GROUP BY kl.tanim, rh.HataTanim
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
@@ -234,6 +251,16 @@ FROM (
         AND p.CastDate >= '2024-03-01'
         AND p.CastDate < '2024-04-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+UNION ALL
+
+	SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE  u.DokumTarih >=  '2024-03-01'
+    AND u.DokumTarih < '2024-04-01' AND u.DokumcuId = 11
+GROUP BY kl.tanim, rh.HataTanim
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
@@ -290,6 +317,16 @@ FROM (
         AND p.CastDate >= '2024-04-01'
         AND p.CastDate < '2024-05-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+UNION ALL
+
+	SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE  u.DokumTarih >=  '2024-04-01'
+    AND u.DokumTarih < '2024-05-01' AND u.DokumcuId = 11
+GROUP BY kl.tanim, rh.HataTanim
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
@@ -346,6 +383,16 @@ FROM (
         AND p.CastDate >= '2024-05-01'
         AND p.CastDate < '2024-06-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+UNION ALL
+
+	SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE  u.DokumTarih >=  '2024-05-01'
+    AND u.DokumTarih < '2024-06-01' AND u.DokumcuId = 11
+GROUP BY kl.tanim, rh.HataTanim
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
@@ -402,6 +449,16 @@ FROM (
         AND p.CastDate >= '2024-06-01'
         AND p.CastDate < '2024-07-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+UNION ALL
+
+	SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE  u.DokumTarih >=  '2024-06-01''
+    AND u.DokumTarih < '2024-07-01'  AND u.DokumcuId = 11
+GROUP BY kl.tanim, rh.HataTanim
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
@@ -458,6 +515,17 @@ FROM (
         AND p.CastDate >= '2023-07-01'
         AND p.CastDate < '2023-08-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+
+UNION ALL
+
+	SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE  u.DokumTarih >=  '2023-07-01'
+    AND u.DokumTarih < '2023-08-01' AND u.DokumcuId = 11
+GROUP BY kl.tanim, rh.HataTanim
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
@@ -514,6 +582,16 @@ FROM (
         AND p.CastDate >= '2023-08-01'
         AND p.CastDate < '2023-09-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+UNION ALL
+
+	SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE  u.DokumTarih >=  '2023-08-01''
+    AND u.DokumTarih < '2023-09-01'  AND u.DokumcuId = 11
+GROUP BY kl.tanim, rh.HataTanim
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
@@ -570,6 +648,16 @@ FROM (
         AND p.CastDate >= '2023-09-01'
         AND p.CastDate < '2023-10-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+UNION ALL
+
+	SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE  u.DokumTarih >=  '2023-09-01'
+    AND u.DokumTarih < '2023-10-01' AND u.DokumcuId = 11
+GROUP BY kl.tanim, rh.HataTanim
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
@@ -626,6 +714,16 @@ FROM (
         AND p.CastDate >= '2023-10-01'
         AND p.CastDate < '2023-11-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+UNION ALL
+
+	SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE  u.DokumTarih >=  '2023-10-01'
+    AND u.DokumTarih < '2023-11-01' AND u.DokumcuId = 11
+GROUP BY kl.tanim, rh.HataTanim
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
@@ -682,6 +780,16 @@ FROM (
         AND p.CastDate >= '2023-11-01'
         AND p.CastDate < '2023-12-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+UNION ALL
+
+	SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE  u.DokumTarih >=  '2023-11-01'
+    AND u.DokumTarih < '2023-12-01' AND u.DokumcuId = 11
+GROUP BY kl.tanim, rh.HataTanim
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
@@ -736,6 +844,16 @@ ORDER BY Tanim ASC, Tür ASC;";
         AND p.CastDate >= '2023-12-01'
         AND p.CastDate < '2024-01-01' 
     GROUP BY kl.kaliteAd, kol.tanim, p.Quality
+UNION ALL
+
+	SELECT rh.HataTanim AS Tür, COUNT(*) AS Adet, kl.tanim AS Tanim
+FROM RotusTakip rt 
+JOIN UT_D_Urunler u ON rt.Barkod = u.BarkodNo 
+JOIN kod_liste kl ON kl.Kimlik = u.TezgahKalipId 
+JOIN RotusHatalari rh ON rh.Id = rt.RotusHata_ID 
+WHERE  u.DokumTarih >= '2023-12-01'
+    AND u.DokumTarih < '2024-01-01' AND u.DokumcuId = 11
+GROUP BY kl.tanim, rh.HataTanim
 ) AS TumUrunler
 GROUP BY Tür, Tanim
 ORDER BY Tanim ASC, Tür ASC;";
