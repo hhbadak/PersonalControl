@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(@default));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.btn_list = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -39,7 +40,6 @@
             this.dtp_dayCaontrol = new System.Windows.Forms.DateTimePicker();
             this.cb_employee = new System.Windows.Forms.ComboBox();
             this.dgv_list = new System.Windows.Forms.DataGridView();
-            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).BeginInit();
             this.SuspendLayout();
@@ -63,6 +63,17 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Seçenekler";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.label4.Location = new System.Drawing.Point(15, 72);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(734, 32);
+            this.label4.TabIndex = 5;
+            this.label4.Text = resources.GetString("label4.Text");
             // 
             // btn_list
             // 
@@ -137,7 +148,6 @@
             // 
             // cb_employee
             // 
-            this.cb_employee.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_employee.FormattingEnabled = true;
             this.cb_employee.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.cb_employee.Location = new System.Drawing.Point(6, 42);
@@ -165,17 +175,7 @@
             this.dgv_list.RowHeadersWidth = 20;
             this.dgv_list.Size = new System.Drawing.Size(776, 319);
             this.dgv_list.TabIndex = 1;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label4.Location = new System.Drawing.Point(15, 72);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(734, 32);
-            this.label4.TabIndex = 5;
-            this.label4.Text = resources.GetString("label4.Text");
+            this.dgv_list.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_list_CellDoubleClick);
             // 
             // @default
             // 

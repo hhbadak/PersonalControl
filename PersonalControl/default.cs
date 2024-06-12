@@ -43,17 +43,27 @@ namespace PersonalControl
             var rt = result.OrderByDescending(r => r.ID).ToList();
             DataTable dt = new DataTable();
 
-            dt.Columns.Add("Durum");
-            dt.Columns.Add("Sayı");
-            dt.Columns.Add("Ürün Kodu");
+            dt.Columns.Add("Tanım");
+            dt.Columns.Add("Döküm");
+            dt.Columns.Add("Extra");
+            dt.Columns.Add("1. Kalite");
+            dt.Columns.Add("2. Kalite");
+            dt.Columns.Add("Iskarta");
+            dt.Columns.Add("Rötuş Hatası");
+            dt.Columns.Add("Döküm Hatası");
 
             for (int i = 0; i < rt.Count; i++)
             {
                 DataRow r = dt.NewRow();
 
-                r["Durum"] = rt[i].Type;
-                r["Sayı"] = rt[i].Count + " Adet";
-                r["Ürün Kodu"] = rt[i].Definition;
+                r["Tanım"] = rt[i].Type;
+                r["Döküm"] = rt[i].Definition + " Adet";
+                r["Extra"] = rt[i].Count2 + " Adet";
+                r["1. Kalite"] = rt[i].Count + " Adet";
+                r["2. Kalite"] = rt[i].Count1 + " Adet";
+                r["Iskarta"] = rt[i].Count3 + " Adet";
+                r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                 dt.Rows.Add(r);
@@ -96,17 +106,27 @@ namespace PersonalControl
                 var rt = result.OrderByDescending(r => r.ID).ToList();
                 DataTable dt = new DataTable();
 
-                dt.Columns.Add("Durum");
-                dt.Columns.Add("Sayı");
-                dt.Columns.Add("Ürün Kodu");
+                dt.Columns.Add("Tanım");
+                dt.Columns.Add("Döküm");
+                dt.Columns.Add("Extra");
+                dt.Columns.Add("1. Kalite");
+                dt.Columns.Add("2. Kalite");
+                dt.Columns.Add("Iskarta");
+                dt.Columns.Add("Rötuş Hatası");
+                dt.Columns.Add("Döküm Hatası");
 
                 for (int i = 0; i < rt.Count; i++)
                 {
                     DataRow r = dt.NewRow();
 
-                    r["Durum"] = rt[i].Type;
-                    r["Sayı"] = rt[i].Count + " Adet";
-                    r["Ürün Kodu"] = rt[i].Definition;
+                    r["Tanım"] = rt[i].Type;
+                    r["Döküm"] = rt[i].Definition + " Adet";
+                    r["Extra"] = rt[i].Count2 + " Adet";
+                    r["1. Kalite"] = rt[i].Count + " Adet";
+                    r["2. Kalite"] = rt[i].Count1 + " Adet";
+                    r["Iskarta"] = rt[i].Count3 + " Adet";
+                    r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                    r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                     dt.Rows.Add(r);
@@ -154,17 +174,27 @@ namespace PersonalControl
                 var rt = result.OrderByDescending(r => r.ID).ToList();
                 DataTable dt = new DataTable();
 
-                dt.Columns.Add("Durum");
-                dt.Columns.Add("Sayı");
-                dt.Columns.Add("Ürün Kodu");
+                dt.Columns.Add("Tanım");
+                dt.Columns.Add("Döküm");
+                dt.Columns.Add("Extra");
+                dt.Columns.Add("1. Kalite");
+                dt.Columns.Add("2. Kalite");
+                dt.Columns.Add("Iskarta");
+                dt.Columns.Add("Rötuş Hatası");
+                dt.Columns.Add("Döküm Hatası");
 
                 for (int i = 0; i < rt.Count; i++)
                 {
                     DataRow r = dt.NewRow();
 
-                    r["Durum"] = rt[i].Type;
-                    r["Sayı"] = rt[i].Count + " Adet";
-                    r["Ürün Kodu"] = rt[i].Definition;
+                    r["Tanım"] = rt[i].Type;
+                    r["Döküm"] = rt[i].Definition + " Adet";
+                    r["Extra"] = rt[i].Count2 + " Adet";
+                    r["1. Kalite"] = rt[i].Count + " Adet";
+                    r["2. Kalite"] = rt[i].Count1 + " Adet";
+                    r["Iskarta"] = rt[i].Count3 + " Adet";
+                    r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                    r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                     dt.Rows.Add(r);
@@ -213,17 +243,27 @@ namespace PersonalControl
                 var rt = result.OrderByDescending(r => r.ID).ToList();
                 DataTable dt = new DataTable();
 
-                dt.Columns.Add("Durum");
-                dt.Columns.Add("Sayı");
-                dt.Columns.Add("Ürün Kodu");
+                dt.Columns.Add("Tanım");
+                dt.Columns.Add("Döküm");
+                dt.Columns.Add("Extra");
+                dt.Columns.Add("1. Kalite");
+                dt.Columns.Add("2. Kalite");
+                dt.Columns.Add("Iskarta");
+                dt.Columns.Add("Rötuş Hatası");
+                dt.Columns.Add("Döküm Hatası");
 
                 for (int i = 0; i < rt.Count; i++)
                 {
                     DataRow r = dt.NewRow();
 
-                    r["Durum"] = rt[i].Type;
-                    r["Sayı"] = rt[i].Count + " Adet";
-                    r["Ürün Kodu"] = rt[i].Definition;
+                    r["Tanım"] = rt[i].Type;
+                    r["Döküm"] = rt[i].Definition + " Adet";
+                    r["Extra"] = rt[i].Count2 + " Adet";
+                    r["1. Kalite"] = rt[i].Count + " Adet";
+                    r["2. Kalite"] = rt[i].Count1 + " Adet";
+                    r["Iskarta"] = rt[i].Count3 + " Adet";
+                    r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                    r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                     dt.Rows.Add(r);
@@ -271,17 +311,27 @@ namespace PersonalControl
                 var rt = result.OrderByDescending(r => r.ID).ToList();
                 DataTable dt = new DataTable();
 
-                dt.Columns.Add("Durum");
-                dt.Columns.Add("Sayı");
-                dt.Columns.Add("Ürün Kodu");
+                dt.Columns.Add("Tanım");
+                dt.Columns.Add("Döküm");
+                dt.Columns.Add("Extra");
+                dt.Columns.Add("1. Kalite");
+                dt.Columns.Add("2. Kalite");
+                dt.Columns.Add("Iskarta");
+                dt.Columns.Add("Rötuş Hatası");
+                dt.Columns.Add("Döküm Hatası");
 
                 for (int i = 0; i < rt.Count; i++)
                 {
                     DataRow r = dt.NewRow();
 
-                    r["Durum"] = rt[i].Type;
-                    r["Sayı"] = rt[i].Count + " Adet";
-                    r["Ürün Kodu"] = rt[i].Definition;
+                    r["Tanım"] = rt[i].Type;
+                    r["Döküm"] = rt[i].Definition + " Adet";
+                    r["Extra"] = rt[i].Count2 + " Adet";
+                    r["1. Kalite"] = rt[i].Count + " Adet";
+                    r["2. Kalite"] = rt[i].Count1 + " Adet";
+                    r["Iskarta"] = rt[i].Count3 + " Adet";
+                    r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                    r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                     dt.Rows.Add(r);
@@ -329,17 +379,27 @@ namespace PersonalControl
                 var rt = result.OrderByDescending(r => r.ID).ToList();
                 DataTable dt = new DataTable();
 
-                dt.Columns.Add("Durum");
-                dt.Columns.Add("Sayı");
-                dt.Columns.Add("Ürün Kodu");
+                dt.Columns.Add("Tanım");
+                dt.Columns.Add("Döküm");
+                dt.Columns.Add("Extra");
+                dt.Columns.Add("1. Kalite");
+                dt.Columns.Add("2. Kalite");
+                dt.Columns.Add("Iskarta");
+                dt.Columns.Add("Rötuş Hatası");
+                dt.Columns.Add("Döküm Hatası");
 
                 for (int i = 0; i < rt.Count; i++)
                 {
                     DataRow r = dt.NewRow();
 
-                    r["Durum"] = rt[i].Type;
-                    r["Sayı"] = rt[i].Count + " Adet";
-                    r["Ürün Kodu"] = rt[i].Definition;
+                    r["Tanım"] = rt[i].Type;
+                    r["Döküm"] = rt[i].Definition + " Adet";
+                    r["Extra"] = rt[i].Count2 + " Adet";
+                    r["1. Kalite"] = rt[i].Count + " Adet";
+                    r["2. Kalite"] = rt[i].Count1 + " Adet";
+                    r["Iskarta"] = rt[i].Count3 + " Adet";
+                    r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                    r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                     dt.Rows.Add(r);
@@ -387,17 +447,27 @@ namespace PersonalControl
                 var rt = result.OrderByDescending(r => r.ID).ToList();
                 DataTable dt = new DataTable();
 
-                dt.Columns.Add("Durum");
-                dt.Columns.Add("Sayı");
-                dt.Columns.Add("Ürün Kodu");
+                dt.Columns.Add("Tanım");
+                dt.Columns.Add("Döküm");
+                dt.Columns.Add("Extra");
+                dt.Columns.Add("1. Kalite");
+                dt.Columns.Add("2. Kalite");
+                dt.Columns.Add("Iskarta");
+                dt.Columns.Add("Rötuş Hatası");
+                dt.Columns.Add("Döküm Hatası");
 
                 for (int i = 0; i < rt.Count; i++)
                 {
                     DataRow r = dt.NewRow();
 
-                    r["Durum"] = rt[i].Type;
-                    r["Sayı"] = rt[i].Count + " Adet";
-                    r["Ürün Kodu"] = rt[i].Definition;
+                    r["Tanım"] = rt[i].Type;
+                    r["Döküm"] = rt[i].Definition + " Adet";
+                    r["Extra"] = rt[i].Count2 + " Adet";
+                    r["1. Kalite"] = rt[i].Count + " Adet";
+                    r["2. Kalite"] = rt[i].Count1 + " Adet";
+                    r["Iskarta"] = rt[i].Count3 + " Adet";
+                    r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                    r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                     dt.Rows.Add(r);
@@ -445,17 +515,27 @@ namespace PersonalControl
                 var rt = result.OrderByDescending(r => r.ID).ToList();
                 DataTable dt = new DataTable();
 
-                dt.Columns.Add("Durum");
-                dt.Columns.Add("Sayı");
-                dt.Columns.Add("Ürün Kodu");
+                dt.Columns.Add("Tanım");
+                dt.Columns.Add("Döküm");
+                dt.Columns.Add("Extra");
+                dt.Columns.Add("1. Kalite");
+                dt.Columns.Add("2. Kalite");
+                dt.Columns.Add("Iskarta");
+                dt.Columns.Add("Rötuş Hatası");
+                dt.Columns.Add("Döküm Hatası");
 
                 for (int i = 0; i < rt.Count; i++)
                 {
                     DataRow r = dt.NewRow();
 
-                    r["Durum"] = rt[i].Type;
-                    r["Sayı"] = rt[i].Count + " Adet";
-                    r["Ürün Kodu"] = rt[i].Definition;
+                    r["Tanım"] = rt[i].Type;
+                    r["Döküm"] = rt[i].Definition + " Adet";
+                    r["Extra"] = rt[i].Count2 + " Adet";
+                    r["1. Kalite"] = rt[i].Count + " Adet";
+                    r["2. Kalite"] = rt[i].Count1 + " Adet";
+                    r["Iskarta"] = rt[i].Count3 + " Adet";
+                    r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                    r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                     dt.Rows.Add(r);
@@ -502,17 +582,27 @@ namespace PersonalControl
                 var rt = result.OrderByDescending(r => r.ID).ToList();
                 DataTable dt = new DataTable();
 
-                dt.Columns.Add("Durum");
-                dt.Columns.Add("Sayı");
-                dt.Columns.Add("Ürün Kodu");
+                dt.Columns.Add("Tanım");
+                dt.Columns.Add("Döküm");
+                dt.Columns.Add("Extra");
+                dt.Columns.Add("1. Kalite");
+                dt.Columns.Add("2. Kalite");
+                dt.Columns.Add("Iskarta");
+                dt.Columns.Add("Rötuş Hatası");
+                dt.Columns.Add("Döküm Hatası");
 
                 for (int i = 0; i < rt.Count; i++)
                 {
                     DataRow r = dt.NewRow();
 
-                    r["Durum"] = rt[i].Type;
-                    r["Sayı"] = rt[i].Count + " Adet";
-                    r["Ürün Kodu"] = rt[i].Definition;
+                    r["Tanım"] = rt[i].Type;
+                    r["Döküm"] = rt[i].Definition + " Adet";
+                    r["Extra"] = rt[i].Count2 + " Adet";
+                    r["1. Kalite"] = rt[i].Count + " Adet";
+                    r["2. Kalite"] = rt[i].Count1 + " Adet";
+                    r["Iskarta"] = rt[i].Count3 + " Adet";
+                    r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                    r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                     dt.Rows.Add(r);
@@ -560,17 +650,27 @@ namespace PersonalControl
                 var rt = result.OrderByDescending(r => r.ID).ToList();
                 DataTable dt = new DataTable();
 
-                dt.Columns.Add("Durum");
-                dt.Columns.Add("Sayı");
-                dt.Columns.Add("Ürün Kodu");
+                dt.Columns.Add("Tanım");
+                dt.Columns.Add("Döküm");
+                dt.Columns.Add("Extra");
+                dt.Columns.Add("1. Kalite");
+                dt.Columns.Add("2. Kalite");
+                dt.Columns.Add("Iskarta");
+                dt.Columns.Add("Rötuş Hatası");
+                dt.Columns.Add("Döküm Hatası");
 
                 for (int i = 0; i < rt.Count; i++)
                 {
                     DataRow r = dt.NewRow();
 
-                    r["Durum"] = rt[i].Type;
-                    r["Sayı"] = rt[i].Count + " Adet";
-                    r["Ürün Kodu"] = rt[i].Definition;
+                    r["Tanım"] = rt[i].Type;
+                    r["Döküm"] = rt[i].Definition + " Adet";
+                    r["Extra"] = rt[i].Count2 + " Adet";
+                    r["1. Kalite"] = rt[i].Count + " Adet";
+                    r["2. Kalite"] = rt[i].Count1 + " Adet";
+                    r["Iskarta"] = rt[i].Count3 + " Adet";
+                    r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                    r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                     dt.Rows.Add(r);
@@ -617,17 +717,27 @@ namespace PersonalControl
                 var rt = result.OrderByDescending(r => r.ID).ToList();
                 DataTable dt = new DataTable();
 
-                dt.Columns.Add("Durum");
-                dt.Columns.Add("Sayı");
-                dt.Columns.Add("Ürün Kodu");
+                dt.Columns.Add("Tanım");
+                dt.Columns.Add("Döküm");
+                dt.Columns.Add("Extra");
+                dt.Columns.Add("1. Kalite");
+                dt.Columns.Add("2. Kalite");
+                dt.Columns.Add("Iskarta");
+                dt.Columns.Add("Rötuş Hatası");
+                dt.Columns.Add("Döküm Hatası");
 
                 for (int i = 0; i < rt.Count; i++)
                 {
                     DataRow r = dt.NewRow();
 
-                    r["Durum"] = rt[i].Type;
-                    r["Sayı"] = rt[i].Count + " Adet";
-                    r["Ürün Kodu"] = rt[i].Definition;
+                    r["Tanım"] = rt[i].Type;
+                    r["Döküm"] = rt[i].Definition + " Adet";
+                    r["Extra"] = rt[i].Count2 + " Adet";
+                    r["1. Kalite"] = rt[i].Count + " Adet";
+                    r["2. Kalite"] = rt[i].Count1 + " Adet";
+                    r["Iskarta"] = rt[i].Count3 + " Adet";
+                    r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                    r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                     dt.Rows.Add(r);
@@ -675,17 +785,27 @@ namespace PersonalControl
                 var rt = result.OrderByDescending(r => r.ID).ToList();
                 DataTable dt = new DataTable();
 
-                dt.Columns.Add("Durum");
-                dt.Columns.Add("Sayı");
-                dt.Columns.Add("Ürün Kodu");
+                dt.Columns.Add("Tanım");
+                dt.Columns.Add("Döküm");
+                dt.Columns.Add("Extra");
+                dt.Columns.Add("1. Kalite");
+                dt.Columns.Add("2. Kalite");
+                dt.Columns.Add("Iskarta");
+                dt.Columns.Add("Rötuş Hatası");
+                dt.Columns.Add("Döküm Hatası");
 
                 for (int i = 0; i < rt.Count; i++)
                 {
                     DataRow r = dt.NewRow();
 
-                    r["Durum"] = rt[i].Type;
-                    r["Sayı"] = rt[i].Count + " Adet";
-                    r["Ürün Kodu"] = rt[i].Definition;
+                    r["Tanım"] = rt[i].Type;
+                    r["Döküm"] = rt[i].Definition + " Adet";
+                    r["Extra"] = rt[i].Count2 + " Adet";
+                    r["1. Kalite"] = rt[i].Count + " Adet";
+                    r["2. Kalite"] = rt[i].Count1 + " Adet";
+                    r["Iskarta"] = rt[i].Count3 + " Adet";
+                    r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                    r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                     dt.Rows.Add(r);
@@ -732,17 +852,27 @@ namespace PersonalControl
                 var rt = result.OrderByDescending(r => r.ID).ToList();
                 DataTable dt = new DataTable();
 
-                dt.Columns.Add("Durum");
-                dt.Columns.Add("Sayı");
-                dt.Columns.Add("Ürün Kodu");
+                dt.Columns.Add("Tanım");
+                dt.Columns.Add("Döküm");
+                dt.Columns.Add("Extra");
+                dt.Columns.Add("1. Kalite");
+                dt.Columns.Add("2. Kalite");
+                dt.Columns.Add("Iskarta");
+                dt.Columns.Add("Rötuş Hatası");
+                dt.Columns.Add("Döküm Hatası");
 
                 for (int i = 0; i < rt.Count; i++)
                 {
                     DataRow r = dt.NewRow();
 
-                    r["Durum"] = rt[i].Type;
-                    r["Sayı"] = rt[i].Count + " Adet";
-                    r["Ürün Kodu"] = rt[i].Definition;
+                    r["Tanım"] = rt[i].Type;
+                    r["Döküm"] = rt[i].Definition + " Adet";
+                    r["Extra"] = rt[i].Count2 + " Adet";
+                    r["1. Kalite"] = rt[i].Count + " Adet";
+                    r["2. Kalite"] = rt[i].Count1 + " Adet";
+                    r["Iskarta"] = rt[i].Count3 + " Adet";
+                    r["Rötuş Hatası"] = rt[i].Count4 + " Adet";
+                    r["Döküm Hatası"] = rt[i].Count5 + " Adet";
 
 
                     dt.Rows.Add(r);
@@ -831,5 +961,9 @@ namespace PersonalControl
             }
         }
 
+        private void dgv_list_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            
+        }
     }
 }
